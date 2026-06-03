@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: airbnb
+    database: AIRBNB_ANALYTICS
+    schema: RAW
+    tables:
+      - name: LISTINGS
+      - name: REVIEWS
