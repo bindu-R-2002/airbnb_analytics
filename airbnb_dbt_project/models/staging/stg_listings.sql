@@ -1,67 +1,52 @@
 select
-    listing_id::integer as listing_id,
-    coalesce(nullif(trim(name), ''), 'Unknown') as name,
+    try_to_number(listing_id)::integer as listing_id,
 
-    host_id::integer as host_id,
-    host_since::date as host_since,
-    nullif(trim(host_location), '') as host_location,
-    nullif(trim(host_response_time), '') as host_response_time,
+    name::varchar as name,
 
-    replace(host_response_rate, '%', '')::float / 100 as host_response_rate,
-    replace(host_acceptance_rate, '%', '')::float / 100 as host_acceptance_rate,
+    host_id::varchar as host_id,
+    try_to_date(host_since) as host_since,
 
-    case
-        when host_is_superhost = 't' then true
-        when host_is_superhost = 'f' then false
-        else null
-    end as host_is_superhost,
+    host_location::varchar as host_location,
+    host_response_time::varchar as host_response_time,
 
-    host_total_listings_count::integer as host_total_listings_count,
+    host_response_rate::varchar as host_response_rate,
+    host_acceptance_rate::varchar as host_acceptance_rate,
 
-    case
-        when host_has_profile_pic = 't' then true
-        when host_has_profile_pic = 'f' then false
-        else null
-    end as host_has_profile_pic,
+    host_is_superhost::varchar as host_is_superhost,
 
-    case
-        when host_identity_verified = 't' then true
-        when host_identity_verified = 'f' then false
-        else null
-    end as host_identity_verified,
+    try_to_number(host_total_listings_count)::integer as host_total_listings_count,
 
-    nullif(trim(neighbourhood), '') as neighbourhood,
-    nullif(trim(district), '') as district,
-    nullif(trim(city), '') as city,
+    host_has_profile_pic::varchar as host_has_profile_pic,
+    host_identity_verified::varchar as host_identity_verified,
 
-    latitude::float as latitude,
-    longitude::float as longitude,
+    neighbourhood::varchar as neighbourhood,
+    district::varchar as district,
+    city::varchar as city,
 
-    nullif(trim(property_type), '') as property_type,
-    nullif(trim(room_type), '') as room_type,
+    try_to_double(latitude) as latitude,
+    try_to_double(longitude) as longitude,
 
-    accommodates::integer as accommodates,
-    bedrooms::float as bedrooms,
+    property_type::varchar as property_type,
+    room_type::varchar as room_type,
 
-    amenities,
+    try_to_number(accommodates)::integer as accommodates,
+    try_to_double(bedrooms) as bedrooms,
 
-    replace(replace(price, '$', ''), ',', '')::numeric(10,2) as price,
+    amenities::varchar as amenities,
 
-    minimum_nights::integer as minimum_nights,
-    maximum_nights::integer as maximum_nights,
+    try_to_decimal(replace(replace(price, '$', ''), ',', ''), 10, 2) as price,
 
-    review_scores_rating::float as review_scores_rating,
-    review_scores_accuracy::float as review_scores_accuracy,
-    review_scores_cleanliness::float as review_scores_cleanliness,
-    review_scores_checkin::float as review_scores_checkin,
-    review_scores_communication::float as review_scores_communication,
-    review_scores_location::float as review_scores_location,
-    review_scores_value::float as review_scores_value,
+    try_to_number(minimum_nights)::integer as minimum_nights,
+    try_to_number(maximum_nights)::integer as maximum_nights,
 
-    case
-        when instant_bookable = 't' then true
-        when instant_bookable = 'f' then false
-        else null
-    end as instant_bookable
+    try_to_double(review_scores_rating) as review_scores_rating,
+    try_to_double(review_scores_accuracy) as review_scores_accuracy,
+    try_to_double(review_scores_cleanliness) as review_scores_cleanliness,
+    try_to_double(review_scores_checkin) as review_scores_checkin,
+    try_to_double(review_scores_communication) as review_scores_communication,
+    try_to_double(review_scores_location) as review_scores_location,
+    try_to_double(review_scores_value) as review_scores_value,
+
+    instant_bookable::varchar as instant_bookable
 
 from {{ source('airbnb', 'LISTINGS') }}

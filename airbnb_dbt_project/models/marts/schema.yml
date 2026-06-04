@@ -1,0 +1,234 @@
+version: 2
+
+models:
+  - name: dim_hosts
+    description: "Dimension table for Airbnb hosts."
+    columns:
+      - name: host_id
+        description: "Unique identifier for each host."
+        tests:
+          - not_null
+          - unique
+
+  - name: dim_dates
+    description: "Date dimension table containing one row per calendar date."
+    columns:
+      - name: date_day
+        description: "Calendar date."
+        tests:
+          - not_null
+          - unique
+
+      - name: year
+        description: "Year of the date."
+
+      - name: quarter
+        description: "Quarter of the year."
+
+      - name: month
+        description: "Month number."
+
+      - name: month_name
+        description: "Month name."
+
+      - name: day_of_month
+        description: "Day of the month."
+
+      - name: day_of_week
+        description: "Day of the week."
+
+      - name: day_name
+        description: "Day name."
+
+      - name: week_of_year
+        description: "Week number of the year."
+
+      - name: is_weekend
+        description: "Whether the date is a weekend."
+
+  - name: fct_reviews
+    description: "Fact table containing Airbnb listing reviews."
+    columns:
+      - name: review_id
+        description: "Unique identifier for each review."
+        tests:
+          - not_null
+
+      - name: listing_id
+        description: "Foreign key to dim_listings."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_listings')
+              field: listing_id
+
+      - name: host_id
+        description: "Foreign key to dim_hosts."
+        tests:
+          - relationships:
+              to: ref('dim_hosts')
+              field: host_id
+
+      - name: reviewer_id
+        description: "Identifier for the reviewer."
+
+      - name: date
+        description: "Date when the review was written."
+        tests:
+          - not_null
+
+  - name: listing_review_summary
+    description: "Summary table showing review activity for each Airbnb listing."
+    columns:
+      - name: listing_id
+        description: "Unique identifier for each listing."
+        tests:
+          - not_null
+          - unique
+
+      - name: host_id
+        description: "Host identifier for the listing."
+
+      - name: listing_name
+        description: "Name/title of the listing."
+
+      - name: neighbourhood
+        description: "Neighbourhood where the listing is located."
+
+      - name: room_type
+        description: "Type of Airbnb room."
+
+      - name: price
+        description: "Listing price."
+
+      - name: total_reviews
+        description: "Total number of reviews for the listing."
+
+      - name: unique_reviewers
+        description: "Number of unique reviewers for the listing."
+
+      - name: first_review_date
+        description: "Date of the first review for the listing."
+
+      - name: latest_review_date
+        description: "Date of the latest review for the listing."
+
+  - name: neighbourhood_summary
+    description: "Summary table showing Airbnb listing and review metrics by neighbourhood."
+    columns:
+      - name: neighbourhood
+        description: "Neighbourhood where listings are located."
+        tests:
+          - not_null
+          - unique
+
+      - name: total_listings
+        description: "Total number of listings in the neighbourhood."
+
+      - name: avg_price
+        description: "Average listing price in the neighbourhood."
+
+      - name: min_price
+        description: "Minimum listing price in the neighbourhood."
+
+      - name: max_price
+        description: "Maximum listing price in the neighbourhood."
+
+      - name: total_reviews
+        description: "Total number of reviews across all listings in the neighbourhood."
+
+      - name: avg_reviews_per_listing
+        description: "Average number of reviews per listing in the neighbourhood."
+
+      - name: total_unique_reviewers
+        description: "Total unique reviewers across listings in the neighbourhood."
+
+  - name: host_performance_summary
+    description: "Summary table showing Airbnb host performance based on listings, prices, neighbourhood coverage, and reviews."
+    columns:
+      - name: host_id
+        description: "Unique identifier for each host."
+        tests:
+          - not_null
+          - unique
+          - relationships:
+              to: ref('dim_hosts')
+              field: host_id
+
+      - name: host_name
+        description: "Name of the Airbnb host."
+
+      - name: total_listings
+        description: "Total number of listings owned by the host."
+
+      - name: total_neighbourhoods
+        description: "Number of distinct neighbourhoods where the host has listings."
+
+      - name: total_room_types
+        description: "Number of distinct room types offered by the host."
+
+      - name: avg_listing_price
+        description: "Average listing price for the host."
+
+      - name: min_listing_price
+        description: "Minimum listing price among the host's listings."
+
+      - name: max_listing_price
+        description: "Maximum listing price among the host's listings."
+
+      - name: total_reviews
+        description: "Total number of reviews across all listings owned by the host."
+
+      - name: avg_reviews_per_listing
+        description: "Average number of reviews per listing for the host."
+
+      - name: total_unique_reviewers
+        description: "Total unique reviewers across all listings owned by the host."
+
+  - name: monthly_review_trends
+    description: "Monthly trend table showing Airbnb review activity over time."
+    columns:
+      - name: review_month
+        description: "Month of the review activity."
+        tests:
+          - not_null
+          - unique
+
+      - name: total_reviews
+        description: "Total number of reviews in the month."
+
+      - name: reviewed_listings
+        description: "Number of distinct listings reviewed in the month."
+
+      - name: unique_reviewers
+        description: "Number of unique reviewers in the month."
+
+  - name: room_type_summary
+    description: "Summary table showing Airbnb listing and review performance by room type."
+    columns:
+      - name: room_type
+        description: "Type/category of Airbnb room."
+        tests:
+          - not_null
+          - unique
+
+      - name: total_listings
+        description: "Total number of listings for the room type."
+
+      - name: avg_price
+        description: "Average listing price for the room type."
+
+      - name: min_price
+        description: "Minimum listing price for the room type."
+
+      - name: max_price
+        description: "Maximum listing price for the room type."
+
+      - name: total_reviews
+        description: "Total number of reviews for the room type."
+
+      - name: avg_reviews_per_listing
+        description: "Average number of reviews per listing for the room type."
+
+      - name: total_unique_reviewers
+        description: "Total unique reviewers for the room type."

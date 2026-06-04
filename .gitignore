@@ -1,0 +1,24 @@
+# dbt artifacts
+target/
+dbt_packages/
+logs/
+../logs/
+
+# editor
+.vscode/
+../.vscode/
+
+# Python/cache
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# secrets
+.env
+profiles.yml
+
+# OS files
+.DS_Store
+Thumbs.db

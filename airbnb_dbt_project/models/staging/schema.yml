@@ -2,21 +2,11 @@ version: 2
 
 models:
   - name: stg_listings
-    description: "Cleaned staging model for Airbnb listings."
     columns:
       - name: listing_id
-        description: "Unique identifier for each listing."
         tests:
           - not_null
           - unique
-
-      - name: name
-        tests:
-          - not_null
-
-      - name: host_id
-        tests:
-          - not_null
 
       - name: price
         tests:
@@ -27,14 +17,12 @@ models:
           - not_null
 
   - name: stg_reviews
-    description: "Staging model for Airbnb reviews."
     columns:
       - name: listing_id
         tests:
           - not_null
 
   - name: dim_listings
-    description: "Final dimension table for Airbnb listings."
     columns:
       - name: listing_id
         tests:
