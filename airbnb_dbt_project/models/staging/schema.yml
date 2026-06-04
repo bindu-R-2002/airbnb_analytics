@@ -28,3 +28,12 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: stg_hosts
+    description: "Staging model containing cleaned host information from Airbnb listings data."
+    columns:
+      - name: host_id
+        description: "Unique identifier for each host."
+        tests:
+          - not_null
+          
